@@ -5,16 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snackbar</title>
-    <script type="module" crossorigin src="/goit-js-hw-10/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/styles-BE24Cirx.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css"
+      integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/goit-js-hw-10/2-snackbar.js"></script>
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/error-BUUcsf8w.js">
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-10/assets/vendor-BbbuE1sJ.js">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/vendor-CZjNVMTf.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-10/assets/styles-BI9x0kcM.css">
   </head>
   <body>
+    <header class="container page-header">
+      <nav class="page-nav">
+        <a href="./1-timer.html">Timer</a>
+        <a href="./2-snackbar.html" class="current-page">Snackbar</a>
+        <a href="./index.html">Go back</a>
+      </nav>
+    </header>
     <main>
       <div class="container">
-        <h1>Snackbar</h1>
-        <a href="./1-timer.html">Timer</a>
-        <a href="./2-snackbar.html">Snackbar</a>
-        <a href="./index.html">Go back</a>
+        <form class="form">
+          <label class="delay-input-label">
+            Delay (ms)
+            <input type="number" name="delay" class="form-input" required />
+          </label>
+
+          <fieldset>
+            <legend>State</legend>
+            <div class="radio-btn-wrapper">
+              <label class="label-first-radio label-radio">
+                <input type="radio" name="state" value="fulfilled" required />
+                Fulfilled
+              </label>
+              <label class="label-radio">
+                <input type="radio" name="state" value="rejected" required />
+                Rejected
+              </label>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="form-btn">Create notification</button>
+        </form>
       </div>
     </main>
   </body>
