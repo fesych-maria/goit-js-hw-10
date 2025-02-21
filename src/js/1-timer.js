@@ -1,26 +1,48 @@
-// Описаний в документації
 import flatpickr from 'flatpickr';
-// Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
+
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
+import iconPath from '../img/error.svg';
+
 const startBtn = document.querySelector('[data-start]');
+const input = document.querySelector('#datetime-picker');
 const days = document.querySelector('[data-days]');
 const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
-
+const errorOptions = {
+  class: 'error-message',
+  title: 'Error',
+  titleColor: '#fff',
+  titleSize: '16px',
+  titleLineHeight: '1.5',
+  message: 'Please choose a date in the future',
+  messageColor: '#fff',
+  messageSize: '16px',
+  messageLineHeight: '1.5',
+  backgroundColor: '#ef4040',
+  position: 'topRight',
+  iconUrl: iconPath,
+};
 let userSelectedDate;
 
+startBtn.setAttribute('disabled', 'true');
 startBtn.addEventListener('click', onClick);
 const options = {
   enableTime: true,
   time_24hr: true,
+  locale: {
+    firstDayOfWeek: 1,
+  },
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+    startBtn.setAttribute('disabled', 'true');
     const startTime = Date.now();
     if (selectedDates[0] <= startTime) {
-      alert('Please choose a date in the future');
-      startBtn.setAttribute('disabled', 'true');
+      iziToast.error(errorOptions);
     } else {
       startBtn.removeAttribute('disabled');
       userSelectedDate = selectedDates[0];
@@ -31,35 +53,43 @@ const options = {
 flatpickr('#datetime-picker', options);
 
 function onClick() {
-  setInterval(() => {
+  startBtn.setAttribute('disabled', 'true');
+  input.setAttribute('disabled', 'true');
+  const intervalId = setInterval(() => {
     const timerTime = userSelectedDate.getTime() - Date.now();
-    const obj = convertMs(timerTime);
-    days.innerHTML = obj.days;
-    hours.innerHTML = obj.hours;
-    minutes.innerHTML = obj.minutes;
-    seconds.innerHTML = obj.seconds;
+    if (timerTime <= 0) {
+      clearInterval(intervalId);
+      input.removeAttribute('disabled');
+    } else {
+      const obj = convertMs(timerTime);
+      days.innerHTML = obj.days;
+      hours.innerHTML = obj.hours;
+      minutes.innerHTML = obj.minutes;
+      seconds.innerHTML = obj.seconds;
+    }
   }, 1000);
 }
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  return { days, hours, minutes, seconds };
+  const timerData = { days, hours, minutes, seconds };
+  const addZeroData = addLeadingZero(timerData);
+  return addZeroData;
 }
 
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+function addLeadingZero(value) {
+  value.days = value.days.toString().padStart(2, '0');
+  value.hours = value.hours.toString().padStart(2, '0');
+  value.minutes = value.minutes.toString().padStart(2, '0');
+  value.seconds = value.seconds.toString().padStart(2, '0');
+  return value;
+}
